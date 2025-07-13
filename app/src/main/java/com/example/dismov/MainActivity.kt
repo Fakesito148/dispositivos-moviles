@@ -29,7 +29,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable(AppRoutes.LOGIN) {
                         LoginScreen(
-                            onLoginSuccess = { role ->
+                            onLoginSuccess = { role, token, userId ->
+                                TokenManager.saveToken(token)
+                                TokenManager.saveUserId(userId)
+
                                 if (role == "admin") {
                                     navController.navigate(AppRoutes.ADMIN)
                                 } else if (role == "user") {
@@ -40,9 +43,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(AppRoutes.ADMIN) {
+                        val token = TokenManager.getToken() ?: ""
                         AdminNavigation(
                             navController = navController,
+                            token = token,
                             onLogout = {
+                                TokenManager.clear()
                                 navController.navigate(AppRoutes.LOGIN) {
                                     popUpTo(0)
                                 }
@@ -51,8 +57,15 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(AppRoutes.USER) {
+                        val token = TokenManager.getToken() ?: ""
+                        val userId = TokenManager.getUserId() ?: ""
+
                         UserNavigation(
+                            navController = navController,
+                            token = token,
+                            userId = userId,
                             onLogout = {
+                                TokenManager.clear()
                                 navController.navigate(AppRoutes.LOGIN) {
                                     popUpTo(0)
                                 }

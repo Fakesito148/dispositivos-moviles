@@ -74,7 +74,7 @@ fun RegisterScreen(
             scope.launch {
                 try {
                     val request = RegisterRequest(name, email, password, role)
-                    api.register(request)
+                    api.register(request) //Error en register
                     onUserRegistered()
                 } catch (e: Exception) {
                     error = "Error: ${e.localizedMessage}"

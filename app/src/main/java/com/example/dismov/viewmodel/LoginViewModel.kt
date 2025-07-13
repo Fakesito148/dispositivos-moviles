@@ -1,4 +1,3 @@
-// LoginViewModel.kt
 package com.example.dismov.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -21,15 +20,23 @@ class LoginViewModel : ViewModel() {
     var loggedUserRole: String? = null
         private set
 
+    var loggedUserToken: String? = null
+        private set
+
+    var loggedUserId: String? = null
+        private set
+
     fun login(identifier: String, password: String) {
         val request = LoginRequest(identifier, password)
         viewModelScope.launch {
             try {
                 val response = authService.login(request)
                 val token = response.token
-                TokenManager.saveToken(token)           // <-- Guardamos el token aquí
+                TokenManager.saveToken(token)
+                loggedUserToken = token
                 loggedUserRole = response.data.user.role
-                _loginResult.value = "Login exitoso: $token"
+                loggedUserId = response.data.user._id
+                _loginResult.value = "Login exitoso"
             } catch (e: HttpException) {
                 _loginResult.value = "Error HTTP: ${e.code()} ${e.message()}"
             } catch (e: Exception) {

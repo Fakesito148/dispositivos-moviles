@@ -9,10 +9,3 @@ data class LoginResponse(
 data class LoginData(
     val user: User
 )
-
-data class User(
-    val _id: String,
-    val name: String,
-    val email: String,
-    val role: String
-)
